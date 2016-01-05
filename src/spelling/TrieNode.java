@@ -1,6 +1,8 @@
 package spelling;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /** 
@@ -27,6 +29,7 @@ class TrieNode {
 		this();
 		this.text = text;
 	}
+	
 	
 	/** Return the TrieNode that is the child when you follow the 
 	 * link from the given Character 
@@ -64,6 +67,12 @@ class TrieNode {
 		return text;
 	}
 	
+    /*Return HashMap of all children from this TrieNode*/
+    public HashMap<Character, TrieNode> getChildren() {
+    	return children;
+    }
+    
+    
     /** Set whether or not this node ends a word in the trie. */
 	public void setEndsWord(boolean b)
 	{
@@ -75,6 +84,7 @@ class TrieNode {
 	{
 		return isWord;
 	}
+	
 	
 	/** Return the set of characters that have links from this node */
 	public Set<Character> getValidNextCharacters()

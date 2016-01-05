@@ -63,9 +63,12 @@ public class EfficientDocument extends Document {
 		}
 		
 		// Check if sentence ends with a word
-		if (isWord(tokens.get(tokens.size() - 1))) {
-			numSentences++;
+		if (tokens.size() > 0) {
+			if (isWord(tokens.get(tokens.size() - 1))) {
+				numSentences++;
+			}
 		}
+		
 	}
 	
 	

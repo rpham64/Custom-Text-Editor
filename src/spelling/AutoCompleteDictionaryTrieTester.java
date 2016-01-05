@@ -138,6 +138,8 @@ public class AutoCompleteDictionaryTrieTester {
 		
 		completions = smallDict.predictCompletions("",  4);
 		assertEquals(4, completions.size());
+		
+		// Throws AssertionError if FALSE
 		assertTrue(completions.contains("a"));
 		assertTrue(completions.contains("he"));
 		boolean twoOfThree = completions.contains("hey") && completions.contains("hot") ||
