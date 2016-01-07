@@ -32,7 +32,15 @@ public class AutoCompleteMatchCase implements  Dictionary, AutoComplete {
 		if (word.length() == 0 || isWord(word)) { return false; }	// Empty String
 		
 		// Ignore case of words
-		word = word.toLowerCase();
+//		word = word.toLowerCase();
+		
+		// Case Sensitive
+		// If first letter is capitalized, set rest of word to lower case
+		if (Character.isUpperCase(word.charAt(0))) {
+			for (int i = 1; i < word.length(); i++) {
+				word[i] = 
+			}
+		}
 		
 		// Set of all children from root
 		HashMap<Character, TrieNode> children = root.getChildren();

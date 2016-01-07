@@ -7,6 +7,7 @@ package spelling;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * WPTree implements WordPath by dynamically creating a tree of words during a Breadth First
@@ -27,22 +28,76 @@ public class WPTree implements WordPath {
 	public WPTree () {
 		this.root = null;
 		// TODO initialize a NearbyWords object
-		// Dictionary d = new DictionaryHashSet();
-		// DictionaryLoader.loadDictionary(d, "data/dict.txt");
-		// this.nw = new NearbyWords(d);
+		Dictionary d = new DictionaryHashSet();
+		DictionaryLoader.loadDictionary(d, "data/dict.txt");
+		this.nw = new NearbyWords(d);
 	}
 	
 	//This constructor will be used by the grader code
+	// Constructs a WPTree of NearbyWords objects
 	public WPTree (NearbyWords nw) {
 		this.root = null;
 		this.nw = nw;
 	}
 	
-	// see method description in WordPath interface
+	 /** Return a path from word1 to word2 through dictionary words with
+	 *  the restriction that each step in the path can involve only a
+	 *  single character mutation  
+	 * @param word1 The first word
+	 * @param word2 The second word
+	 * @return list of Strings which are the path from word1 to word2
+	 *         including word1 and word2
+	 */
 	public List<String> findPath(String word1, String word2) 
 	{
 	    // TODO: Implement this method.
-	    return new LinkedList<String>();
+		Queue<WPTreeNode> queue = new LinkedList<WPTreeNode>();		// WPTreeNodes to explore
+		HashSet<String> visited = new HashSet<String>();			// To avoid checking the
+																	// same strings
+		// Root node
+		WPTreeNode root = new WPTreeNode(word1, null);
+		
+		// Add root to queue and visited
+		queue.add(root);
+		visited.add(root.getWord());
+		
+		WPTreeNode curr = null;
+		
+		// Breadth first search Algorithm
+//		While queue is not empty and we haven't found word2
+//			Remove first node from queue and assign to curr
+//			Set word equal to curr's word
+//			Create a list of words one step from curr's word. Assign to list "neighbors"
+//			for each word in list neighbors
+//				if we did not visit this word (not in list "visited")
+//					assign this word to a child node (curr's child)
+//					add this child node to queue
+//					add this word to list "visited"
+//					if this word is the same as word2
+//						return the path from this word's node to root
+		while (!queue.isEmpty()) {
+			
+			curr = queue.remove();
+			String word = curr.getWord();
+			
+			List<String> neighbors = nw.distanceOne(word, true);
+			
+			for (String neighbor : neighbors) {
+				if (!visited.contains(neighbor)) {
+					
+					WPTreeNode child = curr.addChild(neighbor);
+					queue.add(child);
+					visited.add(neighbor);
+					
+					if (neighbor.equals(word2)) {
+						return child.buildPathToRoot();
+					}
+					
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	// Method to print a list of WPTreeNodes (useful for debugging)
@@ -54,6 +109,29 @@ public class WPTree implements WordPath {
 		}
 		ret+= "]";
 		return ret;
+	}
+	
+	public static void main(String[] args) {
+
+		Dictionary dict = new DictionaryHashSet();
+		DictionaryLoader.loadDictionary(dict, "data/dict.txt");
+		WPTree tree = new WPTree(new NearbyWords(dict));
+		
+		// Test #1
+		String word1 = "pool";
+		String word2 = "spoon";
+		
+		System.out.println("Testing for WPTree");
+		System.out.println("Path from \"" + word1 + "\" to \"" + word2 + "\" is: ");
+		System.out.println(tree.findPath(word1, word2));
+		
+		// Test #2
+		String word3 = "stools";
+		String word4 = "moon";
+		
+		System.out.println("Testing for WPTree");
+		System.out.println("Path from \"" + word3 + "\" to \"" + word4 + "\" is: ");
+		System.out.println(tree.findPath(word3, word4));
 	}
 	
 }
@@ -102,7 +180,7 @@ class WPTreeNode {
    
     /** Allows you to build a path from the root node to 
      *  the calling object
-     * @return The list of strings starting at the root and 
+     * @return The list of strings starting at the root (index 0) and 
      *         ending at the calling object
 	 */
     public List<String> buildPathToRoot() {
@@ -144,4 +222,5 @@ class WPTreeNode {
     }
 
 }
+
 
